@@ -21,14 +21,6 @@ namespace DoctorFinder.Mobile.Views
         private void Button_Clicked(object sender, EventArgs e)
         {
             App.Current.MainPage = new MasterDetail();
-            //DateTime mystring = datepicker.date ;
-
-            datepicker.DateSelected += SelectedDate_Changed;
-        }
-
-        protected void SelectedDate_Changed(object sender, DateChangedEventArgs e)
-        {
-            DateTime mydatestring = e.NewDate;
         }
     }
 }
