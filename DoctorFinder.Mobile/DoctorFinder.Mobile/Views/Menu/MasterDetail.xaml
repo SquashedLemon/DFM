@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:DoctorFinder.Mobile.Views.Menu;assembly=DoctorFinder.Mobile"
+             xmlns:detailViews="clr-namespace:DoctorFinder.Mobile.Views.DetailViews;assembly=DoctorFinder.Mobile"
+             x:Class="DoctorFinder.Mobile.Views.Menu.MasterDetail">
+    <MasterDetailPage.Master>
+        <local:MasterPage x:Name="masterPage"/>
+    </MasterDetailPage.Master>
+    <MasterDetailPage.Detail>
+        <NavigationPage>
+            <x:Arguments>
+                <detailViews:MapViewPage/>
+            </x:Arguments>
+        </NavigationPage>
+    </MasterDetailPage.Detail>
+</MasterDetailPage>

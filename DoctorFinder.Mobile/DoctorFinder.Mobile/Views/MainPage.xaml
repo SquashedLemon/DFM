@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DoctorFinder.Mobile.Views.MainPage">
+    <ContentPage.Content>
+        <StackLayout Padding="50, 100, 50, 50">
+            <DatePicker x:Name="datepicker"/>
+            <Image Source="doh_logo150.png" HeightRequest="300" WidthRequest="300"/>
+            <Button Text="Proceed to application" TextColor="White" Margin="0, 50, 0, 0" BackgroundColor="{StaticResource MainPrimary}" VerticalOptions="End" Clicked="Button_Clicked"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

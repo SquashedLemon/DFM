@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DoctorFinder.Mobile.Views.Menu.MasterPage"
+             Title="Doctor Finder">
+    <ContentPage.Content>
+        <StackLayout x:Name="MasterStack"
+                     VerticalOptions="FillAndExpand">
+            <StackLayout x:Name="TopStack">
+                <StackLayout BackgroundColor="{StaticResource PrimaryColor}" Padding="0, 35, 0, 10">
+                    <Label Text="Doctor Finder"
+                           FontSize="{StaticResource Key=BigSize}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           TextColor="WhiteSmoke"/>
+                </StackLayout>
+            </StackLayout>
+            <StackLayout x:Name="MidStack"
+                         VerticalOptions="FillAndExpand">
+                <ListView x:Name="listView"
+                          SeparatorVisibility="None">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <StackLayout Spacing="0">
+                                    <StackLayout Orientation="Horizontal" Margin="30, 10, 0, 10">
+                                        <Image Source="{Binding IconSource}" 
+                                           HorizontalOptions="Start"
+                                           HeightRequest="30"
+                                           Aspect="AspectFill"/>
+                                        <Label Grid.Column="1" 
+                                           Text="{Binding Title}"
+                                           Margin="15, 0, 0, 0"
+                                           FontSize="{StaticResource Key=BigSize}"
+                                           HorizontalOptions="FillAndExpand"
+                                           VerticalTextAlignment="Center"
+                                           VerticalOptions="FillAndExpand"/>
+                                    </StackLayout>
+                                </StackLayout>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackLayout>
+            <StackLayout x:Name="BottomStack"
+                         VerticalOptions="FillAndExpand">
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

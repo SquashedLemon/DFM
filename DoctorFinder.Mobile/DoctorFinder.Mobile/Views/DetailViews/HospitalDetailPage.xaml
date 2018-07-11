@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:maps="clr-namespace:Xamarin.Forms.GoogleMaps;assembly=Xamarin.Forms.GoogleMaps"
+             x:Class="DoctorFinder.Mobile.Views.DetailViews.HospitalDetailPage">
+    <ContentPage.Content>
+        <StackLayout>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="6*"/>
+                    <RowDefinition Height="4*"/>
+                </Grid.RowDefinitions>
+                <maps:Map Grid.Row="0" x:Name="myMap" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" HeightRequest="300"/>
+                <ScrollView Grid.Row="1">
+                    <StackLayout Margin="5, 5, 5, 5">
+                        <Label x:Name="txtName" Text="" TextColor="Black" FontSize="{StaticResource Key=BigSize}"/>
+                        <Label x:Name="txtVicinity" TextColor="Black" FontSize="{StaticResource Key=MediumSize}"/>
+                        <Label x:Name="txtOpeningHours" TextColor="Black" FontSize="{StaticResource Key=MidMediumSize}"/>
+                    </StackLayout>
+                </ScrollView>
+            </Grid>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

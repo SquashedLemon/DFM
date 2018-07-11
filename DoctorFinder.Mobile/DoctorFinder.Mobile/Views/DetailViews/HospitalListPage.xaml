@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DoctorFinder.Mobile.Views.DetailViews.HospitalListPage">
+    <ContentPage.Content>
+        <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+            <SearchBar x:Name="SearchPlace" Placeholder="Search" BackgroundColor="WhiteSmoke"/>
+            <ScrollView VerticalOptions="FillAndExpand">
+                <StackLayout>
+                    <ListView x:Name="listView" HasUnevenRows="True">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell x:Name="{Binding name}">
+                                    <Frame HasShadow="True" BackgroundColor="WhiteSmoke" Margin="5, 5, 5, 5">
+                                        <StackLayout Orientation="Horizontal" HorizontalOptions="Fill">
+                                            <Image Source="hospital.png" Aspect="AspectFit" HorizontalOptions="Start" WidthRequest="60" HeightRequest="30"/>
+                                            <StackLayout Orientation="Vertical" HorizontalOptions="Fill" Margin="10, 0, 0, 0">
+                                                <Label Text="{Binding EstablishmentTitle}" FontSize="{StaticResource Key=BigSize}" TextColor="Black" VerticalOptions="Start"/>
+                                                <Label Text="{Binding Vicinity}" FontSize="{StaticResource Key=MediumSize}" TextColor="Black" VerticalOptions="End"/>
+                                            </StackLayout>
+                                        </StackLayout>
+                                    </Frame>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackLayout>
+            </ScrollView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

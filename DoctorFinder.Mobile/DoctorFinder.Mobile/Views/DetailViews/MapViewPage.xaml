@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:maps="clr-namespace:Xamarin.Forms.GoogleMaps;assembly=Xamarin.Forms.GoogleMaps"
+             x:Class="DoctorFinder.Mobile.Views.DetailViews.MapViewPage">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="8*"/>
+            </Grid.RowDefinitions>
+            <StackLayout Grid.Row="0" Orientation="Vertical" Margin="10, 20, 10, 0">
+                <Label Text="Doctor Finder" FontSize="{StaticResource Key=BigSize}" VerticalOptions="Center" HorizontalOptions="Center"/>
+                <StackLayout Orientation="Horizontal">
+                    <Picker x:Name="meterPicker" Title="Choose radius" Margin="30, 0, 30, 0" HorizontalOptions="FillAndExpand" FontSize="{StaticResource Key=BigSize}">
+                        <Picker.ItemsSource>
+                            <x:Array Type="{x:Type x:Int32}">
+                                <x:Int32>1000</x:Int32>
+                                <x:Int32>2000</x:Int32>
+                                <x:Int32>3000</x:Int32>
+                                <x:Int32>4000</x:Int32>
+                                <x:Int32>5000</x:Int32>
+                            </x:Array>
+                        </Picker.ItemsSource>
+                    </Picker>
+                </StackLayout>
+                <Picker>
+                    <Picker.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>Hospital</x:String>
+                            <x:String>Pharmacy</x:String>
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
+            </StackLayout>
+            <maps:Map Grid.Row="1" x:Name="myMap" VerticalOptions="FillAndExpand"/>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
