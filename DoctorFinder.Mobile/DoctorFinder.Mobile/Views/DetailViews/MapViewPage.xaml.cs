@@ -41,7 +41,7 @@ namespace DoctorFinder.Mobile.Views.DetailViews
 
                 await GetLocation();
                 await PinNearbyHospitals(CurrentLocation.Position.Latitude, CurrentLocation.Position.Longitude);
-                //await PinNearbyPharmacies(CurrentLocation.Position.Latitude, CurrentLocation.Position.Longitude);
+                await PinNearbyPharmacies(CurrentLocation.Position.Latitude, CurrentLocation.Position.Longitude);
                 loading.Hide();
             }).Invoke();
 
@@ -50,6 +50,8 @@ namespace DoctorFinder.Mobile.Views.DetailViews
             myMap.InfoWindowClicked += MyMap_InfoWindowClicked;
             myMap.InfoWindowLongClicked += MyMap_InfoWindowLongClicked;
             meterPicker.SelectedIndexChanged += MeterPicker_SelectedIndexChanged;
+            categoryPicker.SelectedIndexChanged += CategoryPicker_SelectedIndexChanged;
+            mySlider.ValueChanged += MySlider_ValueChanged;
         }
         #endregion
 
@@ -92,6 +94,35 @@ namespace DoctorFinder.Mobile.Views.DetailViews
                 loading.Hide();
             }
         }
+
+        protected async void CategoryPicker_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (e == null)
+                return;
+            else
+            {
+                var loading = UserDialogs.Instance.Loading("Please wait...");
+
+                myMap.Pins.Clear();
+                myMap.Circles.Clear();
+
+                await GetLocation();
+                
+                if (categoryPicker.SelectedItem.ToString() == "Hospital")
+                    await PinNearbyHospitals(CurrentLocation.Position.Latitude, CurrentLocation.Position.Longitude, Convert.ToInt32(meterPicker.SelectedItem));
+                else if (categoryPicker.SelectedItem.ToString() == "Pharmacy")
+                    await PinNearbyPharmacies(CurrentLocation.Position.Latitude, CurrentLocation.Position.Longitude, Convert.ToInt32(meterPicker.SelectedItem));
+
+                loading.Hide();
+            }
+        }
+
+        protected void MySlider_ValueChanged(object sender, ValueChangedEventArgs e)
+        {
+            double zoomLevel = e.NewValue + 500;
+
+            myMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(GlobalVariables.CurrentLocationLatitude, GlobalVariables.CurrentLocationLongitude), Xamarin.Forms.GoogleMaps.Distance.FromMeters(zoomLevel)), true);
+        }
         #endregion
 
         #region Methods and Functions
@@ -133,6 +164,7 @@ namespace DoctorFinder.Mobile.Views.DetailViews
             myMap.Pins.Add(CurrentLocation);
             myMap.SelectedPin = CurrentLocation;
             myMap.MoveToRegion(MapSpan.FromCenterAndRadius(CurrentLocation.Position, Xamarin.Forms.GoogleMaps.Distance.FromMeters(2500)), true);
+            mySlider.Value = 2500;
         }
 
         //Get the list of hospitals within 2 kilometer range
@@ -169,6 +201,7 @@ namespace DoctorFinder.Mobile.Views.DetailViews
                         Label = item.name,
                         Address = item.vicinity,
                         Position = new Position(tempLat, tempLon),
+                        Icon = BitmapDescriptorFactory.DefaultMarker(Color.Green)
                         //Icon = BitmapDescriptorFactory.FromStream(stream)
                     };
                     
@@ -223,6 +256,7 @@ namespace DoctorFinder.Mobile.Views.DetailViews
                         Label = item.name,
                         Address = item.vicinity,
                         Position = new Position(tempLat, tempLon),
+                        Icon = BitmapDescriptorFactory.DefaultMarker(Color.Red)
                     };
 
                     myMap.Pins.Add(myPin);

@@ -35,9 +35,10 @@ namespace DoctorFinder.Mobile.Views.DetailViews
 
             txtName.Text = this.result.Name;
             txtVicinity.Text = this.result.Vicinity;
-
+            txtDistance.Text = String.Format("Distance (km): {0}", this.result.Distance);
+            txtTravelTime.Text = String.Format("Travel Time: {0}", this.result.TravelTime);
+            
             Title = this.result.Name;
-
 
             //var isTrue = this.result.opening_hours.open_now;
 

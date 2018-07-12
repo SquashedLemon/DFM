@@ -15,7 +15,8 @@
                     <StackLayout Margin="5, 5, 5, 5">
                         <Label x:Name="txtName" Text="" TextColor="Black" FontSize="{StaticResource Key=BigSize}"/>
                         <Label x:Name="txtVicinity" TextColor="Black" FontSize="{StaticResource Key=MediumSize}"/>
-                        <Label x:Name="txtOpeningHours" TextColor="Black" FontSize="{StaticResource Key=MidMediumSize}"/>
+                        <Label x:Name="txtTravelTime" TextColor="Black" FontSize="{StaticResource Key=MidMediumSize}"/>
+                        <Label x:Name="txtDistance" TextColor="Black" FontSize="{StaticResource Key=MidMediumSize}"/>
                     </StackLayout>
                 </ScrollView>
             </Grid>
