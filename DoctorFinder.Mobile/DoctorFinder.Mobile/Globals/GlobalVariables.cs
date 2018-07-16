@@ -11,5 +11,6 @@ namespace DoctorFinder.Mobile.Globals
         public static double DestinationLatitude;
         public static double DestinationLongitude;
         public static double Radius;
+        public static string Establishment = "Hospital";
     }
 }
