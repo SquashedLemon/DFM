@@ -176,7 +176,6 @@ namespace DoctorFinder.Mobile.Views.DetailViews
 
                 polyline.Positions.Add(new Xamarin.Forms.GoogleMaps.Position(currLat, currLon));
 
-
                 foreach (var item in DecodePolylinePoints(overviewPolyline))
                 {
                     polyline.Positions.Add(new Xamarin.Forms.GoogleMaps.Position(item.lat, item.lng));

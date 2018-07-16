@@ -5,7 +5,7 @@
 	<Application.Resources>
         <ResourceDictionary>
             <!--Sizes-->
-            <OnPlatform x:Key="LitteSize"
+            <OnPlatform x:Key="LittleSize"
                         x:TypeArguments="x:Double">
                 <On Platform="Android" Value="12"/>
                 <On Platform="iOS" Value="12"/>

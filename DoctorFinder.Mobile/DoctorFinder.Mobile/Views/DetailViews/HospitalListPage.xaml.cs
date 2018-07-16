@@ -81,7 +81,7 @@ namespace DoctorFinder.Mobile.Views.DetailViews
         #endregion
 
         #region Methods and Functions
-        private async Task ListNearbyHospitals()
+        private async Task ListNearbyEstablishments()
         {
             httpClient = new HttpClient();
 
@@ -112,7 +112,7 @@ namespace DoctorFinder.Mobile.Views.DetailViews
         {
             httpClient = new HttpClient();
 
-            var response = await httpClient.GetStringAsync(Common.GetLocationUri(GlobalVariables.CurrentLocationLatitude, GlobalVariables.CurrentLocationLongitude, Convert.ToInt32(GlobalVariables.Radius)));
+            var response = await httpClient.GetStringAsync(Common.GetLocationUri(GlobalVariables.CurrentLocationLatitude, GlobalVariables.CurrentLocationLongitude, Convert.ToInt32(GlobalVariables.Radius), GlobalVariables.EstablishmentType, GlobalVariables.EstablishmentName));
 
             var deserializatedJson = JsonConvert.DeserializeObject<DoctorFinder.Mobile.Models.Places.RootObject>(response);
 

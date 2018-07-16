@@ -89,6 +89,7 @@
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
     <None Include="Entitlements.plist" />
@@ -175,5 +176,20 @@
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\doh_logo150.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\clinic.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\hospitalcolor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\pharmacy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\doctorcolor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\map.png" />
   </ItemGroup>
 </Project>

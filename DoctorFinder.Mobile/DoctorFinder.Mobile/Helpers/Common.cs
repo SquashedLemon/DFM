@@ -8,17 +8,15 @@ namespace DoctorFinder.Mobile.Helpers
     {
         private const String API_KEY = "AIzaSyB11ozn4Li8PC7vtwGPKBEM6yZwfNwtGQg";
 
-        public static String GetLocationUri(double lat, double lon, int radius = 2000, string type = "hospital")
+        public static String GetLocationUri(double lat, double lon, int radius = 2000, string type = "hospital", string name = "Hospital")
         {
             String baseUrl = $"https://maps.googleapis.com/maps/api/place/nearbysearch/json";
             StringBuilder strBuilder = new StringBuilder(baseUrl);
 
             strBuilder.Append("?location=" + lat + "%2C" + lon);
+            strBuilder.Append("&keyword=" + name);
             strBuilder.Append("&radius=" + radius.ToString());
             strBuilder.Append("&type=" + type);
-            strBuilder.Append("&hasNextPage=true");
-            strBuilder.Append("&nextPage()=true");
-            //strBuilder.Append("&radius=2000&type=hospital");
             strBuilder.Append("&key=" + API_KEY);
 
             return strBuilder.ToString();

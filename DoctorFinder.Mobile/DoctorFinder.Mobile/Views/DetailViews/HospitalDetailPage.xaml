@@ -12,9 +12,9 @@
                 </Grid.RowDefinitions>
                 <maps:Map Grid.Row="0" x:Name="myMap" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" HeightRequest="300"/>
                 <ScrollView Grid.Row="1">
-                    <StackLayout Margin="5, 5, 5, 5">
-                        <Label x:Name="txtName" Text="" TextColor="Black" FontSize="{StaticResource Key=BigSize}"/>
-                        <Label x:Name="txtVicinity" TextColor="Black" FontSize="{StaticResource Key=MediumSize}"/>
+                    <StackLayout Margin="10, 10, 10, 10">
+                        <Label x:Name="txtName" Text="" TextColor="Black" FontSize="{StaticResource Key=BigSize}" HorizontalOptions="FillAndExpand"/>
+                        <Label x:Name="txtVicinity" TextColor="Black" FontSize="{StaticResource Key=MediumSize}" HorizontalOptions="FillAndExpand"/>
                         <Label x:Name="txtTravelTime" TextColor="Black" FontSize="{StaticResource Key=MidMediumSize}"/>
                         <Label x:Name="txtDistance" TextColor="Black" FontSize="{StaticResource Key=MidMediumSize}"/>
                     </StackLayout>
