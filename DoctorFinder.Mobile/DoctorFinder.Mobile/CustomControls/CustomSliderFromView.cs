@@ -47,8 +47,7 @@ namespace DoctorFinder.Mobile.CustomControls
 
             set
             {
-                if (ValueChanged != null)
-                    ValueChanged(this, new ValueChangedEventArgs((int)GetValue(ValueProperty), value));
+                ValueChanged?.Invoke(this, new ValueChangedEventArgs((int)GetValue(ValueProperty), value));
                 this.SetValue(ValueProperty, value);
             }
         }
@@ -65,8 +64,7 @@ namespace DoctorFinder.Mobile.CustomControls
 
             set
             {
-                if (MaximumChanged != null)
-                    MaximumChanged(this, new ValueChangedEventArgs((int)GetValue(MaximumProperty), value));
+                MaximumChanged?.Invoke(this, new ValueChangedEventArgs((int)GetValue(MaximumProperty), value));
                 this.SetValue(MaximumProperty, value);
             }
         }
@@ -83,8 +81,7 @@ namespace DoctorFinder.Mobile.CustomControls
 
             set
             {
-                if (MinimumChanged != null)
-                    MinimumChanged(this, new ValueChangedEventArgs((int)GetValue(MinimumProperty), value));
+                MinimumChanged?.Invoke(this, new ValueChangedEventArgs((int)GetValue(MinimumProperty), value));
                 this.SetValue(MinimumProperty, value);
             }
         }

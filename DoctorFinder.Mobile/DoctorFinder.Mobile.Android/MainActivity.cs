@@ -34,4 +34,3 @@ namespace DoctorFinder.Mobile.Droid
         }
     }
 }
-
