@@ -46,7 +46,7 @@
                 <On Platform="iOS" Value="48"/>
             </OnPlatform>
             <!--This Colors-->
-            <Color x:Key="PrimaryColor">#ff232f</Color>
+            <Color x:Key="PrimaryColor">#75112e</Color>
             <Color x:Key="Active Color">#8d0509</Color>
             <Color x:Key="Disabled Color">#ff9298</Color>
 

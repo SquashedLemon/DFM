@@ -63,7 +63,20 @@ namespace DoctorFinder.Mobile.Droid.Renderer
 
                 System.Diagnostics.Debug.WriteLine(">  New Element: " + Element.Value);
                 _E.NewElement.PropertyChanged += ElementOnPropertyChanged;
+
+                var slider = (CustomSliderFromView)_E.NewElement;
+                Control.Max = (int)(slider.Maximum - slider.Minimum);
+                Control.Progress = (int)(slider.Value - slider.Minimum);
+                Control.StopTrackingTouch += Control_StopTrackingTouch;
             }
+        }
+
+        void Control_StopTrackingTouch(object sender, SeekBar.StopTrackingTouchEventArgs e)
+        {
+            var slider = (CustomSliderFromView)Element;
+            slider.Value = Control.Progress + slider.Minimum;
+            slider.OnStoppedDragging();
+            Element.Value = Control.Progress;
         }
 
         void ElementOnPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

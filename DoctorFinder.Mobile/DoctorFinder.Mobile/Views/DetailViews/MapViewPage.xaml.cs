@@ -43,82 +43,51 @@ namespace DoctorFinder.Mobile.Views.DetailViews
 
                 await GetLocation();
 
-
                 if (GlobalVariables.Radius > 2000 || GlobalVariables.Radius < 2000)
                 {
                     if (GlobalVariables.EstablishmentName == "Hospital")
                     {
-                        frmHospital.BackgroundColor = Color.FromHex("#c5cddb");
-                        frmClinic.BackgroundColor = Color.White;
-                        frmPharmacy.BackgroundColor = Color.White;
-                        frmDoctor.BackgroundColor = Color.White;
-
                         myMap.Pins.Clear();
 
                         await GetLocation();
-                        //await PinNearbyPharmacies(CurrentLocation.Position.Latitude, CurrentLocation.Position.Longitude, Convert.ToInt32(CurrentRadius));
                         await PinNearbyEstablishmentByType(CurrentLocation.Position.Latitude, CurrentLocation.Position.Longitude, "hospital", GlobalVariables.Radius, "Hospital");
 
                     }
                     else if (GlobalVariables.EstablishmentName == "Clinic")
                     {
-                        frmClinic.BackgroundColor = Color.FromHex("#c5cddb");
-                        frmHospital.BackgroundColor = Color.White;
-                        frmPharmacy.BackgroundColor = Color.White;
-                        frmDoctor.BackgroundColor = Color.White;
-
                         myMap.Pins.Clear();
 
                         await GetLocation();
-                        //await PinNearbyPharmacies(CurrentLocation.Position.Latitude, CurrentLocation.Position.Longitude, Convert.ToInt32(CurrentRadius));
                         await PinNearbyEstablishmentByType(CurrentLocation.Position.Latitude, CurrentLocation.Position.Longitude, "clinic", GlobalVariables.Radius, "Clinic");
                     }
                     else if (GlobalVariables.EstablishmentName == "Pharmacy")
                     {
-                        frmPharmacy.BackgroundColor = Color.FromHex("#c5cddb");
-                        frmHospital.BackgroundColor = Color.White;
-                        frmClinic.BackgroundColor = Color.White;
-                        frmDoctor.BackgroundColor = Color.White;
-
                         myMap.Pins.Clear();
 
                         await GetLocation();
-                        //await PinNearbyPharmacies(CurrentLocation.Position.Latitude, CurrentLocation.Position.Longitude, Convert.ToInt32(CurrentRadius));
                         await PinNearbyEstablishmentByType(CurrentLocation.Position.Latitude, CurrentLocation.Position.Longitude, "pharmacy", GlobalVariables.Radius, "Pharmacy");
                     }
                     else if (GlobalVariables.EstablishmentName == "Doctor")
                     {
-                        frmDoctor.BackgroundColor = Color.FromHex("#c5cddb");
-                        frmHospital.BackgroundColor = Color.White;
-                        frmClinic.BackgroundColor = Color.White;
-                        frmPharmacy.BackgroundColor = Color.White;
-
                         myMap.Pins.Clear();
 
                         await GetLocation();
-                        //await PinNearbyPharmacies(CurrentLocation.Position.Latitude, CurrentLocation.Position.Longitude, Convert.ToInt32(CurrentRadius));
                         await PinNearbyEstablishmentByType(CurrentLocation.Position.Latitude, CurrentLocation.Position.Longitude, "health", GlobalVariables.Radius, "Doctor");
                     }
                 }
                 else
                 {
-                    frmHospital.BackgroundColor = Color.FromHex("#c5cddb");
-                    frmClinic.BackgroundColor = Color.White;
-                    frmPharmacy.BackgroundColor = Color.White;
-                    frmDoctor.BackgroundColor = Color.White;
-
                     await PinNearbyEstablishmentByType(CurrentLocation.Position.Latitude, CurrentLocation.Position.Longitude, "hospital", GlobalVariables.Radius, "Hospital");
-
                 }
 
                 loading.Hide();
             }).Invoke();
 
             myMap.PinClicked += MyMap_PinClicked;
-            myMap.SelectedPinChanged += MyMap_SelectedPinChanged;
             myMap.InfoWindowClicked += MyMap_InfoWindowClicked;
             myMap.InfoWindowLongClicked += MyMap_InfoWindowLongClicked;
             mySlider.ValueChanged += MySlider_ValueChanged;
+            mySlider.StoppedDragging += MySlider_StoppedDragging;
         }
         #endregion
 
@@ -130,11 +99,6 @@ namespace DoctorFinder.Mobile.Views.DetailViews
             myMap.MoveToRegion(MapSpan.FromCenterAndRadius(e.Pin.Position, Xamarin.Forms.GoogleMaps.Distance.FromKilometers(4)));
         }
 
-        protected void MyMap_SelectedPinChanged(object sender, SelectedPinChangedEventArgs e)
-        {
-
-        }
-
         protected void MyMap_InfoWindowClicked(object sender, InfoWindowClickedEventArgs e)
         {
             Navigation.PushAsync(new HospitalDetailPage(new Models.Establishment() { Distance = "kdasd", DistanceValue = 222, Latitude = 23, Longitude = 113, Name = "asda", TravelTime = "dasd", Vicinity = "adsada" }));
@@ -143,26 +107,6 @@ namespace DoctorFinder.Mobile.Views.DetailViews
         protected void MyMap_InfoWindowLongClicked(object sender, InfoWindowLongClickedEventArgs e)
         {
 
-        }
-
-#pragma warning disable CS1998 // This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
-        protected async void MeterPicker_SelectedIndexChanged(object sender, EventArgs e)
-#pragma warning restore CS1998 // This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
-        {
-            //if (e == null)
-            //    return;
-            //else
-            //{
-            //    var loading = UserDialogs.Instance.Loading("Please wait...");
-
-            //    myMap.Pins.Clear();
-            //    myMap.Circles.Clear();
-
-            //    await GetLocation();
-            //    await PinNearbyHospitals(CurrentLocation.Position.Latitude, CurrentLocation.Position.Longitude, Convert.ToInt32(meterPicker.SelectedItem));
-
-            //    loading.Hide();
-            //}
         }
 
 #pragma warning disable CS1998 // This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
@@ -195,32 +139,10 @@ namespace DoctorFinder.Mobile.Views.DetailViews
             //}
         }
 
-#pragma warning disable CS1998 // This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
-        protected async void MySlider_ValueChanged(object sender, ValueChangedEventArgs e)
-#pragma warning restore CS1998 // This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+        protected void MySlider_ValueChanged(object sender, ValueChangedEventArgs e)
         {
             GlobalVariables.Radius = ((e.NewValue / 100) * 5000);
-            //await Task.Delay(3000);
 
-            //var loading = UserDialogs.Instance.Loading("Please wait...");
-
-            //myMap.Pins.Clear();
-            //myMap.Circles.Clear();
-
-            //await GetLocation();
-
-            //if (categoryPicker.SelectedItem.ToString() == "Hospital")
-            //{
-            //    GlobalVariables.Establishment = categoryPicker.SelectedItem.ToString();
-            //    await PinNearbyHospitals(CurrentLocation.Position.Latitude, CurrentLocation.Position.Longitude, Convert.ToInt32(e.NewValue));
-            //}
-            //else if (categoryPicker.SelectedItem.ToString() == "Pharmacy")
-            //{
-            //    GlobalVariables.Establishment = categoryPicker.SelectedItem.ToString();
-            //    await PinNearbyPharmacies(CurrentLocation.Position.Latitude, CurrentLocation.Position.Longitude, Convert.ToInt32(e.NewValue));
-            //}
-
-            //loading.Hide();
             double toDisplay = GlobalVariables.Radius / 1000;
             lblMeter.Text = toDisplay.ToString() + "km";
 
@@ -238,19 +160,49 @@ namespace DoctorFinder.Mobile.Views.DetailViews
             myMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(GlobalVariables.CurrentLocationLatitude, GlobalVariables.CurrentLocationLongitude), Xamarin.Forms.GoogleMaps.Distance.FromMeters((GlobalVariables.Radius + 500))), true);
         }
 
+        protected async void MySlider_StoppedDragging(object sender, EventArgs e)
+        {
+            var loading = UserDialogs.Instance.Loading("Please wait...");
+
+            if (GlobalVariables.EstablishmentName == "Hospital")
+            {
+                myMap.Pins.Clear();
+
+                await GetLocation();
+                await PinNearbyEstablishmentByType(CurrentLocation.Position.Latitude, CurrentLocation.Position.Longitude, "hospital", GlobalVariables.Radius, "Hospital");
+
+            }
+            else if (GlobalVariables.EstablishmentName == "Clinic")
+            {
+                myMap.Pins.Clear();
+
+                await GetLocation();
+                await PinNearbyEstablishmentByType(CurrentLocation.Position.Latitude, CurrentLocation.Position.Longitude, "clinic", GlobalVariables.Radius, "Clinic");
+            }
+            else if (GlobalVariables.EstablishmentName == "Pharmacy")
+            {
+                myMap.Pins.Clear();
+
+                await GetLocation();
+                await PinNearbyEstablishmentByType(CurrentLocation.Position.Latitude, CurrentLocation.Position.Longitude, "pharmacy", GlobalVariables.Radius, "Pharmacy");
+            }
+            else if (GlobalVariables.EstablishmentName == "Doctor")
+            {
+                myMap.Pins.Clear();
+
+                await GetLocation();
+                await PinNearbyEstablishmentByType(CurrentLocation.Position.Latitude, CurrentLocation.Position.Longitude, "health", GlobalVariables.Radius, "Doctor");
+            }
+
+            loading.Hide();
+        }
         protected async void FrmHospital_Tapped(object sender, EventArgs e)
         {
-            frmHospital.BackgroundColor = Color.FromHex("#c5cddb");
-            frmClinic.BackgroundColor = Color.White;
-            frmPharmacy.BackgroundColor = Color.White;
-            frmDoctor.BackgroundColor = Color.White;
-
             var loading = UserDialogs.Instance.Loading("Please wait...");
 
             myMap.Pins.Clear();
 
             await GetLocation();
-            //await PinNearbyPharmacies(CurrentLocation.Position.Latitude, CurrentLocation.Position.Longitude, Convert.ToInt32(CurrentRadius));
             await PinNearbyEstablishmentByType(CurrentLocation.Position.Latitude, CurrentLocation.Position.Longitude, "hospital", GlobalVariables.Radius);
 
             loading.Hide();
@@ -258,17 +210,11 @@ namespace DoctorFinder.Mobile.Views.DetailViews
 
         protected async void FrmClinic_Tapped(object sender, EventArgs e)
         {
-            frmClinic.BackgroundColor = Color.FromHex("#c5cddb");
-            frmHospital.BackgroundColor = Color.White;
-            frmPharmacy.BackgroundColor = Color.White;
-            frmDoctor.BackgroundColor = Color.White;
-
             var loading = UserDialogs.Instance.Loading("Please wait...");
 
             myMap.Pins.Clear();
 
             await GetLocation();
-            //await PinNearbyPharmacies(CurrentLocation.Position.Latitude, CurrentLocation.Position.Longitude, Convert.ToInt32(CurrentRadius));
             await PinNearbyEstablishmentByType(CurrentLocation.Position.Latitude, CurrentLocation.Position.Longitude, "clinic", GlobalVariables.Radius, "Clinic");
 
             loading.Hide();
@@ -276,17 +222,11 @@ namespace DoctorFinder.Mobile.Views.DetailViews
 
         protected async void FrmPharmacy_Tapped(object sender, EventArgs e)
         {
-            frmPharmacy.BackgroundColor = Color.FromHex("#c5cddb");
-            frmHospital.BackgroundColor = Color.White;
-            frmClinic.BackgroundColor = Color.White;
-            frmDoctor.BackgroundColor = Color.White;
-
             var loading = UserDialogs.Instance.Loading("Please wait...");
 
             myMap.Pins.Clear();
 
             await GetLocation();
-            //await PinNearbyPharmacies(CurrentLocation.Position.Latitude, CurrentLocation.Position.Longitude, Convert.ToInt32(CurrentRadius));
             await PinNearbyEstablishmentByType(CurrentLocation.Position.Latitude, CurrentLocation.Position.Longitude, "pharmacy", GlobalVariables.Radius, "Pharmacy");
 
             loading.Hide();
@@ -294,17 +234,11 @@ namespace DoctorFinder.Mobile.Views.DetailViews
 
         protected async void FrmDoctor_Tapped(object sender, EventArgs e)
         {
-            frmDoctor.BackgroundColor = Color.FromHex("#c5cddb");
-            frmHospital.BackgroundColor = Color.White;
-            frmClinic.BackgroundColor = Color.White;
-            frmPharmacy.BackgroundColor = Color.White;
-
             var loading = UserDialogs.Instance.Loading("Please wait...");
 
             myMap.Pins.Clear();
 
             await GetLocation();
-            //await PinNearbyPharmacies(CurrentLocation.Position.Latitude, CurrentLocation.Position.Longitude, Convert.ToInt32(CurrentRadius));
             await PinNearbyEstablishmentByType(CurrentLocation.Position.Latitude, CurrentLocation.Position.Longitude, "health", GlobalVariables.Radius, "Doctor");
 
             loading.Hide();
@@ -357,7 +291,6 @@ namespace DoctorFinder.Mobile.Views.DetailViews
             myMap.Pins.Add(CurrentLocation);
             myMap.SelectedPin = CurrentLocation;
             myMap.MoveToRegion(MapSpan.FromCenterAndRadius(CurrentLocation.Position, Xamarin.Forms.GoogleMaps.Distance.FromMeters(2500)), true);
-            //mySlider.Value = 2500;
         }
 
         //Get the list of hospitals within 2 kilometer range
@@ -507,17 +440,6 @@ namespace DoctorFinder.Mobile.Views.DetailViews
 
                     myMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(GlobalVariables.CurrentLocationLatitude, GlobalVariables.CurrentLocationLongitude), Xamarin.Forms.GoogleMaps.Distance.FromMeters(temp)), true);
                 }
-
-                //Circle circle = new Circle()
-                //{
-                //    Center = new Position(GlobalVariables.CurrentLocationLatitude, GlobalVariables.CurrentLocationLongitude),
-                //    Radius = Xamarin.Forms.GoogleMaps.Distance.FromMeters(radius),
-                //    StrokeColor = Color.Blue,
-                //    FillColor = Color.FromRgba(0, 0, 255, 32),
-                //    StrokeWidth = 2f
-                //};
-
-                //myMap.Circles.Add(circle);
             }
             else if (resultStatus.Contains("zero_results".ToUpper()))
                 await UserDialogs.Instance.AlertAsync("No results found", "", "OK");

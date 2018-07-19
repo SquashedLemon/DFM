@@ -7,36 +7,17 @@ namespace DoctorFinder.Mobile.CustomControls
 {
     public class CustomSliderFromView : View
     {
-        /// <summary>
-        /// The ValueChanged event is fired when the Value property changes.
-        /// </summary>
+        public event EventHandler StoppedDragging;
         public event EventHandler<ValueChangedEventArgs> ValueChanged;
-        /// <summary>
-        /// The MaximumChanged event is fired when the Maximum of the slider changes!
-        /// </summary>
         public event EventHandler<ValueChangedEventArgs> MaximumChanged;
-        /// <summary>
-        /// The MinimumChanged event is fired when the Minimum of the slider changes!
-        /// </summary>
         public event EventHandler<ValueChangedEventArgs> MinimumChanged;
-#pragma warning disable CS0618 // 'BindableProperty.Create<TDeclarer, TPropertyType>(Expression<Func<TDeclarer, TPropertyType>>, TPropertyType, BindingMode, BindableProperty.ValidateValueDelegate<TPropertyType>, BindableProperty.BindingPropertyChangedDelegate<TPropertyType>, BindableProperty.BindingPropertyChangingDelegate<TPropertyType>, BindableProperty.CoerceValueDelegate<TPropertyType>, BindableProperty.CreateDefaultValueDelegate<TDeclarer, TPropertyType>)' is obsolete: 'Create<> (generic) is obsolete as of version 2.1.0 and is no longer supported.'
-        /// <summary>
-        /// Value of the Slider ranging between Maximum and Minimum. This is a bindable property.
-        /// </summary>
-        public static readonly BindableProperty ValueProperty = BindableProperty.Create<CustomSliderFromView, int>(p => p.Value, 40);
-#pragma warning restore CS0618 // 'BindableProperty.Create<TDeclarer, TPropertyType>(Expression<Func<TDeclarer, TPropertyType>>, TPropertyType, BindingMode, BindableProperty.ValidateValueDelegate<TPropertyType>, BindableProperty.BindingPropertyChangedDelegate<TPropertyType>, BindableProperty.BindingPropertyChangingDelegate<TPropertyType>, BindableProperty.CoerceValueDelegate<TPropertyType>, BindableProperty.CreateDefaultValueDelegate<TDeclarer, TPropertyType>)' is obsolete: 'Create<> (generic) is obsolete as of version 2.1.0 and is no longer supported.'
-#pragma warning disable CS0618 // 'BindableProperty.Create<TDeclarer, TPropertyType>(Expression<Func<TDeclarer, TPropertyType>>, TPropertyType, BindingMode, BindableProperty.ValidateValueDelegate<TPropertyType>, BindableProperty.BindingPropertyChangedDelegate<TPropertyType>, BindableProperty.BindingPropertyChangingDelegate<TPropertyType>, BindableProperty.CoerceValueDelegate<TPropertyType>, BindableProperty.CreateDefaultValueDelegate<TDeclarer, TPropertyType>)' is obsolete: 'Create<> (generic) is obsolete as of version 2.1.0 and is no longer supported.'
-        /// <summary>
-        /// Identifies the Maximum bindable property.
-        /// </summary>
-        public static readonly BindableProperty MaximumProperty = BindableProperty.Create<CustomSliderFromView, int>(p => p.Maximum, 5000);
-#pragma warning restore CS0618 // 'BindableProperty.Create<TDeclarer, TPropertyType>(Expression<Func<TDeclarer, TPropertyType>>, TPropertyType, BindingMode, BindableProperty.ValidateValueDelegate<TPropertyType>, BindableProperty.BindingPropertyChangedDelegate<TPropertyType>, BindableProperty.BindingPropertyChangingDelegate<TPropertyType>, BindableProperty.CoerceValueDelegate<TPropertyType>, BindableProperty.CreateDefaultValueDelegate<TDeclarer, TPropertyType>)' is obsolete: 'Create<> (generic) is obsolete as of version 2.1.0 and is no longer supported.'
-#pragma warning disable CS0618 // 'BindableProperty.Create<TDeclarer, TPropertyType>(Expression<Func<TDeclarer, TPropertyType>>, TPropertyType, BindingMode, BindableProperty.ValidateValueDelegate<TPropertyType>, BindableProperty.BindingPropertyChangedDelegate<TPropertyType>, BindableProperty.BindingPropertyChangingDelegate<TPropertyType>, BindableProperty.CoerceValueDelegate<TPropertyType>, BindableProperty.CreateDefaultValueDelegate<TDeclarer, TPropertyType>)' is obsolete: 'Create<> (generic) is obsolete as of version 2.1.0 and is no longer supported.'
-        /// <summary>
-        /// Identifies the Minimum bindable property.
-        /// </summary>
-        public static readonly BindableProperty MinimumProperty = BindableProperty.Create<CustomSliderFromView, int>(p => p.Minimum, 0);
-#pragma warning restore CS0618 // 'BindableProperty.Create<TDeclarer, TPropertyType>(Expression<Func<TDeclarer, TPropertyType>>, TPropertyType, BindingMode, BindableProperty.ValidateValueDelegate<TPropertyType>, BindableProperty.BindingPropertyChangedDelegate<TPropertyType>, BindableProperty.BindingPropertyChangingDelegate<TPropertyType>, BindableProperty.CoerceValueDelegate<TPropertyType>, BindableProperty.CreateDefaultValueDelegate<TDeclarer, TPropertyType>)' is obsolete: 'Create<> (generic) is obsolete as of version 2.1.0 and is no longer supported.'
+
+        public static readonly BindableProperty ValueProperty =
+            BindableProperty.Create(nameof(Value), typeof(int), typeof(CustomSliderFromView), 40);
+        public static readonly BindableProperty MaximumProperty =
+            BindableProperty.Create(nameof(Maximum), typeof(int), typeof(CustomSliderFromView), 100);
+        public static readonly BindableProperty MinimumProperty =
+            BindableProperty.Create(nameof(Minimum), typeof(int), typeof(CustomSliderFromView), 0);
 
         public int Value
         {
@@ -51,7 +32,6 @@ namespace DoctorFinder.Mobile.CustomControls
                 this.SetValue(ValueProperty, value);
             }
         }
-
         /// <summary>
         /// Gets or sets the maximum selectable value for the Slider. This is a bindable property.
         /// </summary>
@@ -84,6 +64,11 @@ namespace DoctorFinder.Mobile.CustomControls
                 MinimumChanged?.Invoke(this, new ValueChangedEventArgs((int)GetValue(MinimumProperty), value));
                 this.SetValue(MinimumProperty, value);
             }
+        }
+
+        public void OnStoppedDragging()
+        {
+            StoppedDragging?.Invoke(this, EventArgs.Empty);
         }
     }
 }

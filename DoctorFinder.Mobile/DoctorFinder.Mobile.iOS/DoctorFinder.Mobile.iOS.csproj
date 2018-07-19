@@ -192,4 +192,10 @@
   <ItemGroup>
     <BundleResource Include="Resources\map.png" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\doc.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\pharm.png" />
+  </ItemGroup>
 </Project>

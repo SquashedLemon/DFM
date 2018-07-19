@@ -57,7 +57,6 @@ namespace DoctorFinder.Mobile.Views.DetailViews
             else
             {
                 var placeResult = e.SelectedItem as Models.Establishment;
-                //await Navigation.PushAsync(new HospitalDetailsPage(e.SelectedItem as Result), true);
 
                 await Navigation.PushAsync(new HospitalDetailPage(placeResult), true);
 
