@@ -28,6 +28,7 @@ namespace DoctorFinder.Mobile.Views.DetailViews
         private List<Result> resultsList;
         private Pin CurrentLocation;
         private String CurrentAddress = "";
+        private IProgressDialog progressDialog;
         #endregion
 
         #region Constructor
@@ -37,7 +38,7 @@ namespace DoctorFinder.Mobile.Views.DetailViews
 
             new Action(async () =>
             {
-                var loading = UserDialogs.Instance.Loading("Please wait...");
+                progressDialog = UserDialogs.Instance.Loading("Please wait...");
 
                 mySlider.Value = Convert.ToInt32((GlobalVariables.Radius / 5000) * 100);
 
@@ -80,7 +81,7 @@ namespace DoctorFinder.Mobile.Views.DetailViews
                     await PinNearbyEstablishmentByType(CurrentLocation.Position.Latitude, CurrentLocation.Position.Longitude, "hospital", GlobalVariables.Radius, "Hospital");
                 }
 
-                loading.Hide();
+                progressDialog.Hide();
             }).Invoke();
 
             myMap.PinClicked += MyMap_PinClicked;
@@ -107,36 +108,6 @@ namespace DoctorFinder.Mobile.Views.DetailViews
         protected void MyMap_InfoWindowLongClicked(object sender, InfoWindowLongClickedEventArgs e)
         {
 
-        }
-
-#pragma warning disable CS1998 // This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
-        protected async void CategoryPicker_SelectedIndexChanged(object sender, EventArgs e)
-#pragma warning restore CS1998 // This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
-        {
-            //if (e == null)
-            //    return;
-            //else
-            //{
-            //    var loading = UserDialogs.Instance.Loading("Please wait...");
-
-            //    myMap.Pins.Clear();
-            //    myMap.Circles.Clear();
-
-            //    await GetLocation();
-
-            //    if (categoryPicker.SelectedItem.ToString() == "Hospital")
-            //    {
-            //        GlobalVariables.Establishment = categoryPicker.SelectedItem.ToString();
-            //        await PinNearbyHospitals(CurrentLocation.Position.Latitude, CurrentLocation.Position.Longitude, Convert.ToInt32(meterPicker.SelectedItem));
-            //    }
-            //    else if (categoryPicker.SelectedItem.ToString() == "Pharmacy")
-            //    {
-            //        GlobalVariables.Establishment = categoryPicker.SelectedItem.ToString();
-            //        await PinNearbyPharmacies(CurrentLocation.Position.Latitude, CurrentLocation.Position.Longitude, Convert.ToInt32(meterPicker.SelectedItem));
-            //    }
-
-            //    loading.Hide();
-            //}
         }
 
         protected void MySlider_ValueChanged(object sender, ValueChangedEventArgs e)
@@ -409,40 +380,52 @@ namespace DoctorFinder.Mobile.Views.DetailViews
             GlobalVariables.EstablishmentType = establishmentType;
             GlobalVariables.EstablishmentName = name;
 
-            var response = await httpClient.GetStringAsync(Common.GetLocationUri(lat, lon, Convert.ToInt32(GlobalVariables.Radius), GlobalVariables.EstablishmentType, GlobalVariables.EstablishmentName));
-
-            var deserializedJson = JsonConvert.DeserializeObject<RootObject>(response);
-
-            rootObject = deserializedJson;
-
-            var resultStatus = rootObject.status;
-
-            if (resultStatus.Contains("ok".ToUpper()))
+            try
             {
-                resultsList = rootObject.results;
+                var response = await httpClient.GetStringAsync(Common.GetLocationUri(lat, lon, Convert.ToInt32(GlobalVariables.Radius), GlobalVariables.EstablishmentType, GlobalVariables.EstablishmentName));
 
-                foreach (var item in resultsList)
+                var deserializedJson = JsonConvert.DeserializeObject<RootObject>(response);
+
+                rootObject = deserializedJson;
+
+                var resultStatus = rootObject.status;
+
+                if (resultStatus.Contains("ok".ToUpper()))
                 {
-                    double tempLat = item.geometry.location.lat;
-                    double tempLon = item.geometry.location.lng;
+                    resultsList = rootObject.results;
 
-                    Pin myPin = new Pin()
+                    foreach (var item in resultsList)
                     {
-                        Type = PinType.Place,
-                        Label = item.name,
-                        Address = item.vicinity,
-                        Position = new Position(tempLat, tempLon)
-                    };
+                        double tempLat = item.geometry.location.lat;
+                        double tempLon = item.geometry.location.lng;
 
-                    myMap.Pins.Add(myPin);
+                        Pin myPin = new Pin()
+                        {
+                            Type = PinType.Place,
+                            Label = item.name,
+                            Address = item.vicinity,
+                            Position = new Position(tempLat, tempLon)
+                        };
 
-                    double temp = radius + 500;
+                        myMap.Pins.Add(myPin);
 
-                    myMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(GlobalVariables.CurrentLocationLatitude, GlobalVariables.CurrentLocationLongitude), Xamarin.Forms.GoogleMaps.Distance.FromMeters(temp)), true);
+                        double temp = radius + 500;
+
+                        myMap.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(GlobalVariables.CurrentLocationLatitude, GlobalVariables.CurrentLocationLongitude), Xamarin.Forms.GoogleMaps.Distance.FromMeters(temp)), true);
+                    }
+                }
+                else if (resultStatus.Contains("zero_results".ToUpper()))
+                {
+                    progressDialog.Hide();
+                    await UserDialogs.Instance.AlertAsync("No results found", "", "OK");
                 }
             }
-            else if (resultStatus.Contains("zero_results".ToUpper()))
-                await UserDialogs.Instance.AlertAsync("No results found", "", "OK");
+            catch (Exception)
+            {
+                progressDialog.Hide();
+
+                await UserDialogs.Instance.AlertAsync("Unstable network. Please check your internet connection.", "Error", "Dismiss");
+            }
         }
         #endregion
     }
