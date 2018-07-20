@@ -85,7 +85,6 @@ namespace DoctorFinder.Mobile.Views.DetailViews
             }).Invoke();
 
             myMap.PinClicked += MyMap_PinClicked;
-            myMap.InfoWindowClicked += MyMap_InfoWindowClicked;
             myMap.InfoWindowLongClicked += MyMap_InfoWindowLongClicked;
             mySlider.ValueChanged += MySlider_ValueChanged;
             mySlider.StoppedDragging += MySlider_StoppedDragging;
@@ -98,11 +97,6 @@ namespace DoctorFinder.Mobile.Views.DetailViews
 
             myMap.SelectedPin = e.Pin;
             myMap.MoveToRegion(MapSpan.FromCenterAndRadius(e.Pin.Position, Xamarin.Forms.GoogleMaps.Distance.FromKilometers(4)));
-        }
-
-        protected void MyMap_InfoWindowClicked(object sender, InfoWindowClickedEventArgs e)
-        {
-            Navigation.PushAsync(new HospitalDetailPage(new Models.Establishment() { Distance = "kdasd", DistanceValue = 222, Latitude = 23, Longitude = 113, Name = "asda", TravelTime = "dasd", Vicinity = "adsada" }));
         }
 
         protected void MyMap_InfoWindowLongClicked(object sender, InfoWindowLongClickedEventArgs e)

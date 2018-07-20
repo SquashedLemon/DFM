@@ -35,15 +35,13 @@ namespace DoctorFinder.Mobile.Views.DetailViews
 
             listView.ItemSelected += ListView_OnItemSelected;
             SearchPlace.TextChanged += SearchPlace_TextChanged;
-            //listView.Focused += ListView_Focused;
 
             new Action(async () =>
             {
                 var loading = UserDialogs.Instance.Loading("Please wait...");
 
-                //await ListNearbyHospitals();
-
                 await GetDirection();
+
                 loading.Hide();
             }).Invoke();
         }
