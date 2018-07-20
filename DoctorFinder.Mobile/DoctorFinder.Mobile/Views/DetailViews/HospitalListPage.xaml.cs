@@ -155,7 +155,8 @@ namespace DoctorFinder.Mobile.Views.DetailViews
                     TravelTime = routes[0].legs[0].duration.text,
                     Vicinity = item.vicinity,
                     Latitude = item.geometry.location.lat,
-                    Longitude = item.geometry.location.lng
+                    Longitude = item.geometry.location.lng,
+                    PlaceId = item.place_id
                 });
             }
 

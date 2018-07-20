@@ -34,5 +34,17 @@ namespace DoctorFinder.Mobile.Helpers
 
             return strBuilder.ToString();
         }
+
+        public static String GetDetails(string placeId)
+        {
+            String baseUrl = $"https://maps.googleapis.com/maps/api/place/details/json";
+            StringBuilder strBuilder = new StringBuilder(baseUrl);
+
+            strBuilder.Append("?placeid=" + placeId);
+            strBuilder.Append("&fields=name,rating,formatted_phone_number,reviews,formatted_address");
+            strBuilder.Append("&key=" + API_KEY);
+
+            return strBuilder.ToString();
+        }
     }
 }

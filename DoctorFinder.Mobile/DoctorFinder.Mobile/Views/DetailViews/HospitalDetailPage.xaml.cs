@@ -4,6 +4,7 @@ using DoctorFinder.Mobile.Models.Directions;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -22,8 +23,11 @@ namespace DoctorFinder.Mobile.Views.DetailViews
         private HttpClient httpClient;
         //private List<Route> routeList;
         //private Route route;
+        private ObservableCollection<Models.PlaceReview.Review> reviewCollection;
+        private ObservableCollection<Models.EstablishmentInformation> establishmentInfoCollection;
         private Models.Establishment result;
         private RootObject rootObject;
+        private string placeId;
         #endregion
 
         #region Constructor
@@ -37,7 +41,8 @@ namespace DoctorFinder.Mobile.Views.DetailViews
             txtVicinity.Text = this.result.Vicinity;
             txtDistance.Text = String.Format("Distance (km): {0}", this.result.Distance);
             txtTravelTime.Text = String.Format("Travel Time: {0}", this.result.TravelTime);
-            
+            placeId = this.result.PlaceId;
+
             Title = this.result.Name;
 
             //var isTrue = this.result.opening_hours.open_now;
@@ -58,6 +63,7 @@ namespace DoctorFinder.Mobile.Views.DetailViews
             new Action(async () =>
             {
                 await GetDirection();
+                await GetPlaceDetails(placeId);
             }).Invoke();
 
             Pin myPin = new Pin()
@@ -168,8 +174,6 @@ namespace DoctorFinder.Mobile.Views.DetailViews
 
             if (rootObject.status.Contains("ok".ToUpper()))
             {
-                //route = rootObject.
-
                 var overviewPolyline = myRoute[0].overview_polyline.points;
 
                 Xamarin.Forms.GoogleMaps.Polyline polyline = new Xamarin.Forms.GoogleMaps.Polyline();
@@ -186,8 +190,40 @@ namespace DoctorFinder.Mobile.Views.DetailViews
 
                 myMap.Polylines.Add(polyline);
             }
-            //else
-            //    Debug.Write("Request failed.");
+        }
+
+        public async Task GetPlaceDetails(string id)
+        {
+            httpClient = new HttpClient();
+
+            var response = await httpClient.GetStringAsync(Common.GetDetails(id));
+
+            var deserializedJson = JsonConvert.DeserializeObject<Models.PlaceReview.Rootobject>(response);
+
+            Models.PlaceReview.Rootobject placeReviewRootObject = deserializedJson;
+
+            var reviews = placeReviewRootObject.result.reviews;
+            
+            if (reviews != null)
+            {
+                reviewCollection = new ObservableCollection<Models.PlaceReview.Review>();
+
+                establishmentInfoCollection = new ObservableCollection<Models.EstablishmentInformation>();
+
+                foreach (var review in reviews)
+                {
+                    establishmentInfoCollection.Add(new Models.EstablishmentInformation()
+                    {
+                        AuthorName = review.author_name,
+                        PhotoUrl = review.profile_photo_url,
+                        Rating = review.rating,
+                        RelativeTimeDescription = review.relative_time_description,
+                        Review = review.text
+                    });
+                }
+
+                listView.ItemsSource = establishmentInfoCollection;
+            }
         }
         #endregion
     }
