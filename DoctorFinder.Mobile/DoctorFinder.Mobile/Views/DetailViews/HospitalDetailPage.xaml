@@ -5,7 +5,7 @@
              x:Class="DoctorFinder.Mobile.Views.DetailViews.HospitalDetailPage">
     <ContentPage.Content>
         <StackLayout>
-            <Grid>
+            <Grid VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="5*"/>
                     <RowDefinition Height="5*"/>
