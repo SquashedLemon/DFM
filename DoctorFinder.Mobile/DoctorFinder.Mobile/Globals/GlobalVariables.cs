@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 
 namespace DoctorFinder.Mobile.Globals
@@ -13,5 +14,7 @@ namespace DoctorFinder.Mobile.Globals
         public static double Radius = 2000;
         public static string EstablishmentType = "hospital";
         public static string EstablishmentName = "Hospital";
+        public static List<Models.Places.Result> CurrentResults;
+        public static ObservableCollection<Models.Establishment> ObservableEstablishments;
     }
 }

@@ -46,5 +46,16 @@ namespace DoctorFinder.Mobile.Helpers
 
             return strBuilder.ToString();
         }
+
+        public static String GetDetails(double lat, double lon)
+        {
+            String baseUrl = $"https://maps.googleapis.com/maps/api/geocode/json";
+            StringBuilder strBuilder = new StringBuilder(baseUrl);
+
+            strBuilder.Append("?address=" + lat.ToString() + "," + lon.ToString());
+            strBuilder.Append("&key=" + API_KEY);
+
+            return strBuilder.ToString();
+        }
     }
 }

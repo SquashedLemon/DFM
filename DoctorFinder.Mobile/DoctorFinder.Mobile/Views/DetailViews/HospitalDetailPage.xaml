@@ -17,33 +17,31 @@
                     <Label x:Name="txtTravelTime" TextColor="Black" FontSize="{StaticResource Key=MidMediumSize}"/>
                     <Label x:Name="txtDistance" TextColor="Black" FontSize="{StaticResource Key=MidMediumSize}"/>
                     <BoxView BackgroundColor="Black" HeightRequest="1" HorizontalOptions="FillAndExpand"/>
-                    <ScrollView>
-                        <ListView x:Name="listView" HasUnevenRows="True" VerticalOptions="FillAndExpand">
-                            <ListView.ItemTemplate>
-                                <DataTemplate>
-                                    <ViewCell>
-                                        <Frame HasShadow="True" Margin="5, 5, 5, 5" VerticalOptions="FillAndExpand">
-                                            <StackLayout>
-                                                <StackLayout Orientation="Horizontal" Margin="20, 0, 0, 0">
-                                                    <Image HorizontalOptions="Start" Source="{Binding PhotoUrl}" HeightRequest="60" WidthRequest="60"/>
-                                                    <StackLayout Orientation="Vertical" Margin="5, 0, 0, 0">
-                                                        <Label VerticalOptions="Start" Text="{Binding AuthorName}" FontSize="Large"/>
-                                                        <StackLayout Orientation="Horizontal">
-                                                            <Label Text="{Binding Rating, StringFormat='Rating: {0}'}" FontSize="Small"/>
-                                                            <Label Text="{Binding RelativeTimeDescription}" FontSize="Small"/>
-                                                        </StackLayout>
+                    <ListView x:Name="listView" HasUnevenRows="True" VerticalOptions="FillAndExpand">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Frame HasShadow="True" Margin="5, 5, 5, 5" VerticalOptions="FillAndExpand">
+                                        <StackLayout>
+                                            <StackLayout Orientation="Horizontal" Margin="20, 0, 0, 0">
+                                                <Image HorizontalOptions="Start" Source="{Binding PhotoUrl}" HeightRequest="60" WidthRequest="60"/>
+                                                <StackLayout Orientation="Vertical" Margin="5, 0, 0, 0">
+                                                    <Label VerticalOptions="Start" Text="{Binding AuthorName}" FontSize="Large"/>
+                                                    <StackLayout Orientation="Horizontal">
+                                                        <Label Text="{Binding Rating, StringFormat='Rating: {0}'}" FontSize="Small"/>
+                                                        <Label Text="{Binding RelativeTimeDescription}" FontSize="Small"/>
                                                     </StackLayout>
                                                 </StackLayout>
-                                                <StackLayout Margin="20, 0, 20, 0">
-                                                    <Label LineBreakMode="WordWrap" Text="{Binding Review}"/>
-                                                </StackLayout>
                                             </StackLayout>
-                                        </Frame>
-                                    </ViewCell>
-                                </DataTemplate>
-                            </ListView.ItemTemplate>
-                        </ListView>
-                    </ScrollView>
+                                            <StackLayout Margin="20, 0, 20, 0">
+                                                <Label LineBreakMode="WordWrap" Text="{Binding Review}"/>
+                                            </StackLayout>
+                                        </StackLayout>
+                                    </Frame>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
                 </StackLayout>
             </Grid>
         </StackLayout>

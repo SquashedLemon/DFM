@@ -20,7 +20,7 @@ namespace DoctorFinder.Mobile.Views
 
         private void Button_Clicked(object sender, EventArgs e)
         {
-            App.Current.MainPage = new MasterDetail();
+            App.Current.MainPage = new NavigationPage(new TempMainPage());
         }
     }
 }
