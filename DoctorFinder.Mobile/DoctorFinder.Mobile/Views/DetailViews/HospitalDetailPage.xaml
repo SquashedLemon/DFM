@@ -7,8 +7,8 @@
         <StackLayout>
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="6*"/>
-                    <RowDefinition Height="4*"/>
+                    <RowDefinition Height="5*"/>
+                    <RowDefinition Height="5*"/>
                 </Grid.RowDefinitions>
                 <maps:Map Grid.Row="0" x:Name="myMap" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" HeightRequest="300"/>
                 <StackLayout Grid.Row="1" Margin="10, 10, 10, 10" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
