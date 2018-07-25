@@ -7,16 +7,55 @@
         <StackLayout>
             <Grid VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="5*"/>
-                    <RowDefinition Height="5*"/>
+                    <RowDefinition Height="4*"/>
+                    <RowDefinition Height="6*"/>
                 </Grid.RowDefinitions>
                 <maps:Map Grid.Row="0" x:Name="myMap" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" HeightRequest="300"/>
-                <StackLayout Grid.Row="1" Margin="10, 10, 10, 10" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
-                    <Label x:Name="txtName" Text="" TextColor="Black" FontSize="{StaticResource Key=BigSize}" HorizontalOptions="FillAndExpand"/>
-                    <Label x:Name="txtVicinity" TextColor="Black" FontSize="{StaticResource Key=MediumSize}" HorizontalOptions="FillAndExpand"/>
-                    <Label x:Name="txtTravelTime" TextColor="Black" FontSize="{StaticResource Key=MidMediumSize}"/>
-                    <Label x:Name="txtDistance" TextColor="Black" FontSize="{StaticResource Key=MidMediumSize}"/>
-                    <BoxView BackgroundColor="Black" HeightRequest="1" HorizontalOptions="FillAndExpand"/>
+                <StackLayout Grid.Row="1" Padding="10, 10, 10, 10" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" BackgroundColor="Red">
+                    <Label x:Name="txtName" Text="" TextColor="White" FontSize="{StaticResource Key=BigSize}" HorizontalOptions="FillAndExpand"/>
+                    <Label x:Name="txtVicinity" TextColor="White" FontSize="{StaticResource Key=MediumSize}" HorizontalOptions="FillAndExpand"/>
+                    <Label x:Name="txtTravelTime" TextColor="White" FontSize="{StaticResource Key=MidMediumSize}"/>
+                    <Label x:Name="txtDistance" TextColor="White" FontSize="{StaticResource Key=MidMediumSize}"/>
+                    <StackLayout Orientation="Horizontal">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Frame Grid.Column="0" Grid.Row="0" x:Name="FrmDriving" HasShadow="False" CornerRadius="50" VerticalOptions="Center" BackgroundColor="White">
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="FrmDriving_Tapped"/>
+                                </Frame.GestureRecognizers>
+                                <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                                    <Image x:Name="ImgCar" Source="carblack.png" WidthRequest="20" HeightRequest="20"/>
+                                    <Label x:Name="LblDrivingTime"/>
+                                </StackLayout>
+                            </Frame>
+                            <Frame Grid.Column="1" Grid.Row="0" x:Name="FrmTransit" HasShadow="False" CornerRadius="50" VerticalOptions="Center" BackgroundColor="Red">
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="FrmTransit_Tapped"/>
+                                </Frame.GestureRecognizers>
+                                <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                                    <Image x:Name="ImgTransit" Source="train.png" WidthRequest="20" HeightRequest="20"/>
+                                    <Label x:Name="LblTransitTime" TextColor="White"/>
+                                </StackLayout>
+                            </Frame>
+                            <Frame Grid.Column="2" Grid.Row="0" x:Name="FrmWalking" HasShadow="False" CornerRadius="50" VerticalOptions="Center" BackgroundColor="Red">
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="FrmWalking_Tapped"/>
+                                </Frame.GestureRecognizers>
+                                <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                                    <Image x:Name="ImgWalking" Source="walking.png" WidthRequest="20" HeightRequest="20"/>
+                                    <Label x:Name="LblWalkingTime" TextColor="White"/>
+                                </StackLayout>
+                            </Frame>
+                        </Grid>
+                    </StackLayout>
+                    <BoxView BackgroundColor="White" HeightRequest="1" HorizontalOptions="FillAndExpand"/>
                     <ListView x:Name="listView" HasUnevenRows="True" VerticalOptions="FillAndExpand">
                         <ListView.ItemTemplate>
                             <DataTemplate>

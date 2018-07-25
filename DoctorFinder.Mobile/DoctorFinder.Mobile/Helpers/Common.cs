@@ -22,14 +22,14 @@ namespace DoctorFinder.Mobile.Helpers
             return strBuilder.ToString();
         }
 
-        public static String GetRouteUri(double currentLat, double currentLon, double destinationLat, double destinationLon)
+        public static String GetRouteUri(double currentLat, double currentLon, double destinationLat, double destinationLon, string mode = "driving")
         {
             String baseUrl = $"https://maps.googleapis.com/maps/api/directions/json";
             StringBuilder strBuilder = new StringBuilder(baseUrl);
 
             strBuilder.Append("?origin=" + currentLat.ToString() + "," + currentLon.ToString());
             strBuilder.Append("&destination=" + destinationLat.ToString() + "," + destinationLon.ToString());
-            strBuilder.Append("&mode=driving");
+            strBuilder.Append("&mode=" + mode);
             strBuilder.Append("&key=" + API_KEY);
 
             return strBuilder.ToString();
@@ -53,6 +53,19 @@ namespace DoctorFinder.Mobile.Helpers
             StringBuilder strBuilder = new StringBuilder(baseUrl);
 
             strBuilder.Append("?address=" + lat.ToString() + "," + lon.ToString());
+            strBuilder.Append("&key=" + API_KEY);
+
+            return strBuilder.ToString();
+        }
+
+        public static String GetTravelDetails(double currentLat, double currentLon, double destLat, double destLon, string mode)
+        {
+            String baseUrl = $"https://maps.googleapis.com/maps/api/distancematrix/json";
+            StringBuilder strBuilder = new StringBuilder(baseUrl);
+
+            strBuilder.Append("?origins=" + currentLat.ToString() + "," + currentLon.ToString());
+            strBuilder.Append("&destinations=" + destLat.ToString() + "," + destLon.ToString());
+            strBuilder.Append("&mode=" + mode);
             strBuilder.Append("&key=" + API_KEY);
 
             return strBuilder.ToString();

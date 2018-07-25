@@ -1,4 +1,5 @@
-﻿using DoctorFinder.Mobile.Globals;
+﻿using Acr.UserDialogs;
+using DoctorFinder.Mobile.Globals;
 using DoctorFinder.Mobile.Helpers;
 using DoctorFinder.Mobile.Models.Directions;
 using Newtonsoft.Json;
@@ -34,13 +35,12 @@ namespace DoctorFinder.Mobile.Views.DetailViews
         public HospitalDetailPage(Models.Establishment result)
         {
             InitializeComponent();
-
+            
             this.result = result;
 
             txtName.Text = this.result.Name;
             txtVicinity.Text = this.result.Vicinity;
             txtDistance.Text = String.Format("Distance (km): {0}", this.result.Distance);
-            txtTravelTime.Text = String.Format("Travel Time: {0}", this.result.TravelTime);
             placeId = this.result.PlaceId;
 
             Title = this.result.Name;
@@ -62,6 +62,10 @@ namespace DoctorFinder.Mobile.Views.DetailViews
 
             new Action(async () =>
             {
+                await GetTravelDetails("driving");
+                await GetTravelDetails("transit");
+                await GetTravelDetails("walking");
+
                 await GetDirection();
                 await GetPlaceDetails(placeId);
             }).Invoke();
@@ -81,7 +85,44 @@ namespace DoctorFinder.Mobile.Views.DetailViews
         #endregion
 
         #region Events
+        protected void FrmDriving_Tapped(object sender, EventArgs e)
+        {
+            FrmDriving.BackgroundColor = Color.White;
+            LblDrivingTime.TextColor = Color.Black;
+            ImgCar.Source = "carblack.png";
+            FrmTransit.BackgroundColor = Color.Red;
+            LblTransitTime.TextColor = Color.White;
+            ImgTransit.Source = "train.png";
+            FrmWalking.BackgroundColor = Color.Red;
+            LblWalkingTime.TextColor = Color.White;
+            ImgWalking.Source = "walking.png";
+        }
 
+        protected void FrmTransit_Tapped(object sender, EventArgs e)
+        {
+            FrmDriving.BackgroundColor = Color.Red;
+            LblDrivingTime.TextColor = Color.White;
+            ImgCar.Source = "car.png";
+            FrmTransit.BackgroundColor = Color.White;
+            LblTransitTime.TextColor = Color.Black;
+            ImgTransit.Source = "trainblack.png";
+            FrmWalking.BackgroundColor = Color.Red;
+            LblWalkingTime.TextColor = Color.White;
+            ImgWalking.Source = "walking.png";
+        }
+
+        protected void FrmWalking_Tapped(object sender, EventArgs e)
+        {
+            FrmDriving.BackgroundColor = Color.Red;
+            LblDrivingTime.TextColor = Color.White;
+            ImgCar.Source = "car.png";
+            FrmTransit.BackgroundColor = Color.Red;
+            LblTransitTime.TextColor = Color.White;
+            ImgTransit.Source = "train.png";
+            FrmWalking.BackgroundColor = Color.White;
+            LblWalkingTime.TextColor = Color.Black;
+            ImgWalking.Source = "walkingblack.png";
+        }
         #endregion
 
         #region Methods and Functions
@@ -223,6 +264,56 @@ namespace DoctorFinder.Mobile.Views.DetailViews
                 }
 
                 listView.ItemsSource = establishmentInfoCollection;
+            }
+        }
+
+        public async Task GetTravelDetails(string mode)
+        {
+            try
+            {
+                httpClient = new HttpClient();
+
+                var response = await httpClient.GetStringAsync(Common.GetTravelDetails(GlobalVariables.CurrentLocationLatitude, GlobalVariables.CurrentLocationLongitude, GlobalVariables.DestinationLatitude, GlobalVariables.DestinationLongitude, mode));
+
+                var deserializedJson = JsonConvert.DeserializeObject<Models.Distance.Rootobject>(response);
+
+                if (deserializedJson.status.Contains("ok".ToUpper()))
+                {
+                    if (mode == "walking")
+                    {
+                        LblWalkingTime.Text = deserializedJson.rows[0].elements[0].duration.text;
+                    }
+                    else if (mode == "driving")
+                    {
+                        LblDrivingTime.Text = deserializedJson.rows[0].elements[0].duration.text;
+                        txtTravelTime.Text = String.Format("Travel Time: {0} (Driving mode)", deserializedJson.rows[0].elements[0].duration.text);
+                    }
+                    else if (mode == "transit")
+                    {
+                        LblTransitTime.Text = deserializedJson.rows[0].elements[0].duration.text;
+                    }
+                }
+                else
+                    await UserDialogs.Instance.AlertAsync("No results found.", "Error", "OK");
+            }
+            catch(NullReferenceException)
+            {
+                if (mode == "walking")
+                {
+                    LblWalkingTime.Text = "Not Available";
+                }
+                else if (mode == "driving")
+                {
+                    LblDrivingTime.Text = "Not Available";
+                }
+                else if (mode == "transit")
+                {
+                    LblTransitTime.Text = "Not Available";
+                }
+            }
+            catch (HttpRequestException)
+            {
+                await UserDialogs.Instance.AlertAsync("Unstable network connection. Please reconnect.", "Error", "OK");
             }
         }
         #endregion

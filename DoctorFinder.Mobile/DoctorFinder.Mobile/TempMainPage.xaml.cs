@@ -16,6 +16,7 @@ namespace DoctorFinder.Mobile
 	{
         #region Variable Declarations
         private bool isMap = true;
+        private bool isSecond = false;
         #endregion
 
         #region Constructor
@@ -35,9 +36,17 @@ namespace DoctorFinder.Mobile
             myStack.Children.Clear();
 
             if (isMap)
+            {
                 myStack.Children.Add(new MapView());
+
+                isSecond = false;
+            }
             else
-                myStack.Children.Add(new MapListView());
+            {
+                myStack.Children.Add(new MapListView(isSecond));
+
+                isSecond = true;
+            }
         }
 
         protected void FrmClinic_Tapped(object sender, EventArgs e)
@@ -47,9 +56,17 @@ namespace DoctorFinder.Mobile
             myStack.Children.Clear();
 
             if (isMap)
+            {
                 myStack.Children.Add(new MapView());
+
+                isSecond = false;
+            }
             else
-                myStack.Children.Add(new MapListView());
+            {
+                myStack.Children.Add(new MapListView(isSecond));
+
+                isSecond = true;
+            }
         }
 
         protected void FrmPharmacy_Tapped(object sender, EventArgs e)
@@ -59,9 +76,17 @@ namespace DoctorFinder.Mobile
             myStack.Children.Clear();
 
             if (isMap)
+            {
                 myStack.Children.Add(new MapView());
+
+                isSecond = false;
+            }
             else
-                myStack.Children.Add(new MapListView());
+            {
+                myStack.Children.Add(new MapListView(isSecond));
+
+                isSecond = true;
+            }
         }
 
         protected void FrmDoctor_Tapped(object sender, EventArgs e)
@@ -71,9 +96,17 @@ namespace DoctorFinder.Mobile
             myStack.Children.Clear();
 
             if (isMap)
+            {
                 myStack.Children.Add(new MapView());
+
+                isSecond = false;
+            }
             else
-                myStack.Children.Add(new MapListView());
+            {
+                myStack.Children.Add(new MapListView(isSecond));
+
+                isSecond = true;
+            }
         }
 
         protected void BtnMap_Clicked(object sender, EventArgs e)

@@ -26,20 +26,25 @@ namespace DoctorFinder.Mobile.Views
 	{
         #region Variable Declarations
         private HttpClient httpClient;
+        private IProgressDialog progressDialog;
         #endregion
 
         #region Constructor
-        public MapListView()
+        public MapListView(bool isTrue = false)
         {
             InitializeComponent();
 
-            if (GlobalVariables.ObservableEstablishments != null)
-            {
-                listView.ItemsSource = GlobalVariables.ObservableEstablishments;
-            }
+            if (!isTrue)
+                listView.ItemsSource = GlobalVariables.ObservableEstablishments.OrderBy(x => x.Distance);
             else
             {
+                new Action(async () =>
+                {
+                    progressDialog = UserDialogs.Instance.Loading("Please wait...");
 
+                    await GetItems();
+                    await GetDirection();
+                }).Invoke();
             }
 
             SearchPlace.TextChanged += SearchPlace_TextChanged;
@@ -78,7 +83,78 @@ namespace DoctorFinder.Mobile.Views
         #endregion
 
         #region Methods and Functions
+        protected async Task GetItems()
+        {
+            try
+            {
+                httpClient = new HttpClient();
 
+                var response = await httpClient.GetStringAsync(Common.GetLocationUri(GlobalVariables.CurrentLocationLatitude, GlobalVariables.CurrentLocationLongitude, Convert.ToInt32(GlobalVariables.Radius), GlobalVariables.EstablishmentType, GlobalVariables.EstablishmentName));
+
+                var deserializedJson = JsonConvert.DeserializeObject<Models.Places.RootObject>(response);
+
+                var resultStatus = deserializedJson.status;
+
+                if (resultStatus.Contains("ok".ToUpper()))
+                {
+                    var resultList = deserializedJson.results;
+
+                    GlobalVariables.CurrentResults = resultList;
+                }
+            }
+            catch (Exception)
+            {
+                progressDialog.Hide();
+
+                await UserDialogs.Instance.AlertAsync("Unstable network connection. Please reconnect.", "Error", "OK");
+            }
+        }
+
+        protected async Task GetDirection()
+        {
+            List<Establishment> establishmentList = new List<Establishment>();
+
+            try
+            {
+                httpClient = new HttpClient();
+
+                foreach (var result in GlobalVariables.CurrentResults)
+                {
+                    var desLt = result.geometry.location.lat;
+                    var destLn = result.geometry.location.lng;
+
+                    var response = await httpClient.GetStringAsync(Common.GetRouteUri(GlobalVariables.CurrentLocationLatitude, GlobalVariables.CurrentLocationLongitude, desLt, destLn));
+
+                    var deserializedJson = JsonConvert.DeserializeObject<Models.Directions.RootObject>(response);
+
+                    var routes = deserializedJson.routes.ToList();
+
+                    establishmentList.Add(new Establishment()
+                    {
+                        Name = result.name,
+                        Distance = routes[0].legs[0].distance.text,
+                        DistanceValue = routes[0].legs[0].duration.value,
+                        TravelTime = routes[0].legs[0].duration.text,
+                        Vicinity = result.vicinity,
+                        Latitude = result.geometry.location.lat,
+                        Longitude = result.geometry.location.lng,
+                        PlaceId = result.place_id
+                    });
+                }
+
+                GlobalVariables.ObservableEstablishments = new ObservableCollection<Establishment>(establishmentList);
+
+                listView.ItemsSource = GlobalVariables.ObservableEstablishments.OrderBy(x => x.Distance);
+
+                progressDialog.Hide();
+            }
+            catch (HttpRequestException)
+            {
+                progressDialog.Hide();
+
+                await UserDialogs.Instance.AlertAsync("Unstable network connection. Please reconnect.", "Error", "OK");
+            }
+        }
         #endregion
     }
 }

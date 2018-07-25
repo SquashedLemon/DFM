@@ -198,4 +198,22 @@
   <ItemGroup>
     <BundleResource Include="Resources\pharm.png" />
   </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\carblack.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\train.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\trainblack.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\walking.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\walkingblack.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\car.png" />
+  </ItemGroup>
 </Project>
