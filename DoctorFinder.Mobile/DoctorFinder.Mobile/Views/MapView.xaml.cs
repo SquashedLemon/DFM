@@ -3,6 +3,7 @@ using DoctorFinder.Mobile.Globals;
 using DoctorFinder.Mobile.Helpers;
 using DoctorFinder.Mobile.Models;
 using DoctorFinder.Mobile.Models.Places;
+using DoctorFinder.Mobile.Views.DetailViews;
 using Newtonsoft.Json;
 using Plugin.Geolocator;
 using System;
@@ -71,11 +72,19 @@ namespace DoctorFinder.Mobile.Views
             }).Invoke();
 
             myMap.PinClicked += MyMap_PinClicked;
+            myMap.InfoWindowClicked += MyMap_InfoWindowClicked;
             mySlider.ValueChanged += MySlider_ValueChanged;
             mySlider.StoppedDragging += MySlider_StoppedDragging;
         }
 
         #region Events
+        protected async void MyMap_InfoWindowClicked(object sender, InfoWindowClickedEventArgs e)
+        {
+            if (GlobalVariables.ObservableEstablishments.Where(x => x.Name == e.Pin.Label).FirstOrDefault() is Establishment selectedPin)
+                await Navigation.PushAsync(new HospitalDetailPage(selectedPin));
+
+        }
+
         protected void MyMap_PinClicked(object sender, PinClickedEventArgs e)
         {
             myMap.SelectedPin = e.Pin;

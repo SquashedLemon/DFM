@@ -29,6 +29,7 @@ namespace DoctorFinder.Mobile.Views.DetailViews
         private Models.Establishment result;
         private RootObject rootObject;
         private string placeId;
+        private IProgressDialog progressDialog = null;
         #endregion
 
         #region Constructor
@@ -85,7 +86,7 @@ namespace DoctorFinder.Mobile.Views.DetailViews
         #endregion
 
         #region Events
-        protected void FrmDriving_Tapped(object sender, EventArgs e)
+        protected async void FrmDriving_Tapped(object sender, EventArgs e)
         {
             FrmDriving.BackgroundColor = Color.White;
             LblDrivingTime.TextColor = Color.Black;
@@ -96,9 +97,15 @@ namespace DoctorFinder.Mobile.Views.DetailViews
             FrmWalking.BackgroundColor = Color.Red;
             LblWalkingTime.TextColor = Color.White;
             ImgWalking.Source = "walking.png";
+
+            progressDialog = UserDialogs.Instance.Loading("Please wait...");
+
+            myMap.Polylines.Clear();
+
+            await GetDirection("driving");
         }
 
-        protected void FrmTransit_Tapped(object sender, EventArgs e)
+        protected async void FrmTransit_Tapped(object sender, EventArgs e)
         {
             FrmDriving.BackgroundColor = Color.Red;
             LblDrivingTime.TextColor = Color.White;
@@ -109,9 +116,15 @@ namespace DoctorFinder.Mobile.Views.DetailViews
             FrmWalking.BackgroundColor = Color.Red;
             LblWalkingTime.TextColor = Color.White;
             ImgWalking.Source = "walking.png";
+
+            progressDialog = UserDialogs.Instance.Loading("Please wait...");
+
+            myMap.Polylines.Clear();
+
+            await GetDirection("transit");
         }
 
-        protected void FrmWalking_Tapped(object sender, EventArgs e)
+        protected async void FrmWalking_Tapped(object sender, EventArgs e)
         {
             FrmDriving.BackgroundColor = Color.Red;
             LblDrivingTime.TextColor = Color.White;
@@ -122,6 +135,12 @@ namespace DoctorFinder.Mobile.Views.DetailViews
             FrmWalking.BackgroundColor = Color.White;
             LblWalkingTime.TextColor = Color.Black;
             ImgWalking.Source = "walkingblack.png";
+
+            progressDialog = UserDialogs.Instance.Loading("Please wait...");
+
+            myMap.Polylines.Clear();
+
+            await GetDirection("walking");
         }
         #endregion
 
@@ -189,47 +208,65 @@ namespace DoctorFinder.Mobile.Views.DetailViews
                 }
                 catch (Exception)
                 {
-                    //Debug.Write(ex.Message);
+
                 }
 
                 return polyLocation;
             }
         }
 
-        private async Task GetDirection()
+        private async Task GetDirection(string mode = "driving")
         {
-            httpClient = new HttpClient();
-
-            double currLat = GlobalVariables.CurrentLocationLatitude;
-            double currLon = GlobalVariables.CurrentLocationLongitude;
-            double destLat = GlobalVariables.DestinationLatitude;
-            double destLon = GlobalVariables.DestinationLongitude;
-
-            var response = await httpClient.GetStringAsync(Common.GetRouteUri(currLat, currLon, destLat, destLon));
-
-            var deserializedJson = JsonConvert.DeserializeObject<RootObject>(response);
-
-            rootObject = deserializedJson;
-
-            List<Route> myRoute = rootObject.routes;
-
-            if (rootObject.status.Contains("ok".ToUpper()))
+            try
             {
-                var overviewPolyline = myRoute[0].overview_polyline.points;
+                httpClient = new HttpClient();
 
-                Xamarin.Forms.GoogleMaps.Polyline polyline = new Xamarin.Forms.GoogleMaps.Polyline();
+                double currLat = GlobalVariables.CurrentLocationLatitude;
+                double currLon = GlobalVariables.CurrentLocationLongitude;
+                double destLat = GlobalVariables.DestinationLatitude;
+                double destLon = GlobalVariables.DestinationLongitude;
 
-                polyline.Positions.Add(new Xamarin.Forms.GoogleMaps.Position(currLat, currLon));
+                var response = await httpClient.GetStringAsync(Common.GetRouteUri(currLat, currLon, destLat, destLon, mode));
 
-                foreach (var item in DecodePolylinePoints(overviewPolyline))
+                var deserializedJson = JsonConvert.DeserializeObject<RootObject>(response);
+
+                rootObject = deserializedJson;
+
+                List<Route> myRoute = rootObject.routes;
+
+                if (rootObject.status.Contains("ok".ToUpper()))
                 {
-                    polyline.Positions.Add(new Xamarin.Forms.GoogleMaps.Position(item.lat, item.lng));
+                    var overviewPolyline = myRoute[0].overview_polyline.points;
+
+                    Xamarin.Forms.GoogleMaps.Polyline polyline = new Xamarin.Forms.GoogleMaps.Polyline();
+
+                    polyline.Positions.Add(new Position(currLat, currLon));
+
+                    foreach (var item in DecodePolylinePoints(overviewPolyline))
+                    {
+                        polyline.Positions.Add(new Position(item.lat, item.lng));
+                    }
+
+                    polyline.Positions.Add(new Position(destLat, destLon));
+                    polyline.StrokeWidth = 4;
+
+                    myMap.Polylines.Add(polyline);
                 }
 
-                polyline.Positions.Add(new Xamarin.Forms.GoogleMaps.Position(destLat, destLon));
-                polyline.StrokeWidth = 4;
+                if (progressDialog != null)
+                    progressDialog.Hide();
+            }
+            catch (NullReferenceException)
+            {
+                progressDialog.Hide();
 
-                myMap.Polylines.Add(polyline);
+                await UserDialogs.Instance.AlertAsync("Not available", "Error", "OK");
+            }
+            catch (HttpRequestException)
+            {
+                progressDialog.Hide();
+
+                await UserDialogs.Instance.AlertAsync("Unstable network connection. Please reconnect.", "Error", "OK");
             }
         }
 
