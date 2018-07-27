@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using Xamarin.Forms;
@@ -26,10 +27,12 @@ namespace DoctorFinder.Mobile.Views.DetailViews
         //private Route route;
         private ObservableCollection<Models.PlaceReview.Review> reviewCollection;
         private ObservableCollection<Models.EstablishmentInformation> establishmentInfoCollection;
+        private ObservableCollection<Models.TravelInstructions> observableInstructions;
         private Models.Establishment result;
         private RootObject rootObject;
         private string placeId;
         private IProgressDialog progressDialog = null;
+        private List<Step> StepList;
         #endregion
 
         #region Constructor
@@ -68,7 +71,6 @@ namespace DoctorFinder.Mobile.Views.DetailViews
                 await GetTravelDetails("walking");
 
                 await GetDirection();
-                await GetPlaceDetails(placeId);
             }).Invoke();
 
             Pin myPin = new Pin()
@@ -91,10 +93,10 @@ namespace DoctorFinder.Mobile.Views.DetailViews
             FrmDriving.BackgroundColor = Color.White;
             LblDrivingTime.TextColor = Color.Black;
             ImgCar.Source = "carblack.png";
-            FrmTransit.BackgroundColor = Color.Red;
+            FrmTransit.BackgroundColor = Color.FromHex("#a0143d");
             LblTransitTime.TextColor = Color.White;
             ImgTransit.Source = "train.png";
-            FrmWalking.BackgroundColor = Color.Red;
+            FrmWalking.BackgroundColor = Color.FromHex("#a0143d");
             LblWalkingTime.TextColor = Color.White;
             ImgWalking.Source = "walking.png";
 
@@ -107,13 +109,13 @@ namespace DoctorFinder.Mobile.Views.DetailViews
 
         protected async void FrmTransit_Tapped(object sender, EventArgs e)
         {
-            FrmDriving.BackgroundColor = Color.Red;
+            FrmDriving.BackgroundColor = Color.FromHex("#a0143d");
             LblDrivingTime.TextColor = Color.White;
             ImgCar.Source = "car.png";
             FrmTransit.BackgroundColor = Color.White;
             LblTransitTime.TextColor = Color.Black;
             ImgTransit.Source = "trainblack.png";
-            FrmWalking.BackgroundColor = Color.Red;
+            FrmWalking.BackgroundColor = Color.FromHex("#a0143d");
             LblWalkingTime.TextColor = Color.White;
             ImgWalking.Source = "walking.png";
 
@@ -126,10 +128,10 @@ namespace DoctorFinder.Mobile.Views.DetailViews
 
         protected async void FrmWalking_Tapped(object sender, EventArgs e)
         {
-            FrmDriving.BackgroundColor = Color.Red;
+            FrmDriving.BackgroundColor = Color.FromHex("#a0143d");
             LblDrivingTime.TextColor = Color.White;
             ImgCar.Source = "car.png";
-            FrmTransit.BackgroundColor = Color.Red;
+            FrmTransit.BackgroundColor = Color.FromHex("#a0143d");
             LblTransitTime.TextColor = Color.White;
             ImgTransit.Source = "train.png";
             FrmWalking.BackgroundColor = Color.White;
@@ -199,8 +201,8 @@ namespace DoctorFinder.Mobile.Views.DetailViews
 
                         Location pointLocation = new Location()
                         {
-                            lat = currentLat / 100000.0,
-                            lng = currentLon / 100000.0
+                            Lat = currentLat / 100000.0,
+                            Lng = currentLon / 100000.0
                         };
 
                         polyLocation.Add(pointLocation);
@@ -232,11 +234,11 @@ namespace DoctorFinder.Mobile.Views.DetailViews
 
                 rootObject = deserializedJson;
 
-                List<Route> myRoute = rootObject.routes;
+                List<Route> myRoute = rootObject.Routes;
 
-                if (rootObject.status.Contains("ok".ToUpper()))
+                if (rootObject.Status.Contains("ok".ToUpper()))
                 {
-                    var overviewPolyline = myRoute[0].overview_polyline.points;
+                    var overviewPolyline = myRoute[0].OverviewPolyline.Points;
 
                     Xamarin.Forms.GoogleMaps.Polyline polyline = new Xamarin.Forms.GoogleMaps.Polyline();
 
@@ -244,13 +246,70 @@ namespace DoctorFinder.Mobile.Views.DetailViews
 
                     foreach (var item in DecodePolylinePoints(overviewPolyline))
                     {
-                        polyline.Positions.Add(new Position(item.lat, item.lng));
+                        polyline.Positions.Add(new Position(item.Lat, item.Lng));
+                    }
+
+                    StepList = new List<Step>();
+
+                    foreach (var item in myRoute.First().Legs.First().Steps)
+                    {
+                        StepList.Add(item);
                     }
 
                     polyline.Positions.Add(new Position(destLat, destLon));
                     polyline.StrokeWidth = 4;
 
                     myMap.Polylines.Add(polyline);
+
+                    var steps = myRoute.First().Legs.First().Steps;
+
+                    observableInstructions = new ObservableCollection<Models.TravelInstructions>();
+
+                    foreach (var step in steps)
+                    {
+                        var direction = step.HtmlInstructions.ToLower();
+                        var mySource = new Models.TravelInstructions() { Instruction = StripHtmlTags(step.HtmlInstructions) };
+
+                        if (step.TravelMode == "WALKING")
+                        {
+                            mySource.ImageSource = "walkingblack.png";
+                        }
+                        else if (step.TravelMode == "TRANSIT")
+                        {
+                            mySource.ImageSource = "trainblack.png";
+                        }
+                        else if (step.TravelMode == "DRIVING")
+                        {
+                            mySource.ImageSource = "carblack.png";
+                        }
+
+                        observableInstructions.Add(mySource);
+
+                        if (step.Substeps != null)
+                        {
+                            foreach (var substeps in step.Substeps)
+                            {
+                                var subSource = new Models.TravelInstructions() { Instruction = StripHtmlTags(substeps.HtmlInstructions) };
+
+                                if (substeps.TravelMode == "WALKING")
+                                {
+                                    subSource.ImageSource = "walkingblack.png";
+                                }
+                                else if (substeps.TravelMode == "TRANSIT")
+                                {
+                                    subSource.ImageSource = "trainblack.png";
+                                }
+                                else if (substeps.TravelMode == "DRIVING")
+                                {
+                                    subSource.ImageSource = "carblack.png";
+                                }
+
+                                observableInstructions.Add(subSource);
+                            }
+                        }
+                    }
+
+                    listView.ItemsSource = observableInstructions;
                 }
 
                 if (progressDialog != null)
@@ -353,6 +412,8 @@ namespace DoctorFinder.Mobile.Views.DetailViews
                 await UserDialogs.Instance.AlertAsync("Unstable network connection. Please reconnect.", "Error", "OK");
             }
         }
+
+        public string StripHtmlTags(string html) => Regex.Replace(html, @"<(.|\n)*?>", string.Empty);
         #endregion
     }
 }

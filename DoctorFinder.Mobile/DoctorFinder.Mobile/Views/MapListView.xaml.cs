@@ -127,14 +127,14 @@ namespace DoctorFinder.Mobile.Views
 
                     var deserializedJson = JsonConvert.DeserializeObject<Models.Directions.RootObject>(response);
 
-                    var routes = deserializedJson.routes.ToList();
+                    var routes = deserializedJson.Routes.ToList();
 
                     establishmentList.Add(new Establishment()
                     {
                         Name = result.name,
-                        Distance = routes[0].legs[0].distance.text,
-                        DistanceValue = routes[0].legs[0].duration.value,
-                        TravelTime = routes[0].legs[0].duration.text,
+                        Distance = routes.First().Legs.First().Distance.Text,
+                        DistanceValue = Convert.ToInt32(routes.First().Legs.First().Duration.Value),
+                        TravelTime = routes.First().Legs.First().Duration.Text,
                         Vicinity = result.vicinity,
                         Latitude = result.geometry.location.lat,
                         Longitude = result.geometry.location.lng,
