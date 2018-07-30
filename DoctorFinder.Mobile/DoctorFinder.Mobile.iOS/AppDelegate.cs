@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using DoctorFinder.Mobile.Constants;
 using Foundation;
 using UIKit;
 
@@ -23,6 +23,7 @@ namespace DoctorFinder.Mobile.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
+            Xamarin.FormsGoogleMaps.Init(ApiConstants.GOOGLE_MAPS_IOS_API_KEY);
             LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);

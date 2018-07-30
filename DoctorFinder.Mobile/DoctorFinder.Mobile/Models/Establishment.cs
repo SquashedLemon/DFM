@@ -1,11 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 
 namespace DoctorFinder.Mobile.Models
 {
     public class Establishment
     {
+        private static ObservableCollection<Establishment> establishments;
+
+        public ObservableCollection<Establishment> establishmentssss
+        {
+            get => establishments;
+            set => establishments = value;
+        }
+
         public string PlaceId { get; set; }
         public string Name { get; set; }
         public string Vicinity { get; set; }
@@ -32,5 +41,16 @@ namespace DoctorFinder.Mobile.Models
         public string AuthorName { get; set; }
         public int Rating { get; set; }
         public string RelativeTimeDescription { get; set; }
+
+        Establishment est = new Establishment();
+
+        private void getdata()
+        {
+            ObservableCollection<Establishment> example = new ObservableCollection<Establishment>()
+            {
+                new Establishment() { Distance = "dsasd" },
+                new Establishment() {}
+            };
+        }
     }
 }
